@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free online tools for images, PDF, QR codes, calculators, text and YouTube creators.">
+<title>All Tools Online - Free Online Tools</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+header{background:#155eef;color:white;padding:25px 15px;text-align:center}
+header h1{margin:0 0 10px}
+header p{margin:0}
+main{max-width:1000px;margin:auto;padding:20px 14px}
+#search{width:100%;padding:14px;border:1px solid #ccd3df;border-radius:10px;font-size:16px;margin-bottom:20px}
+h2{font-size:21px}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.card{background:white;border:1px solid #e0e5ee;border-radius:12px;padding:17px 12px;text-align:center}
+.card h3{font-size:16px;margin:8px 0}
+.card p{font-size:13px;color:#647084;min-height:30px}
+button{border:0;background:#155eef;color:white;padding:10px 12px;border-radius:7px;cursor:pointer}
+.card button{width:100%}
+#workspace{background:white;padding:18px;border-radius:12px;margin:20px 0;display:none}
+#workspace input,#workspace textarea{max-width:100%;width:100%;padding:12px;margin:8px 0;border:1px solid #ccd3df;border-radius:7px;font-size:16px}
+#result{overflow-wrap:anywhere;margin-top:12px}
+footer{text-align:center;padding:25px;color:#647084}
+a{color:#155eef}
+</style>
+</head>
+<body>
+<header>
+<h1>🛠️ All Tools Online</h1>
+<p>Free online tools for everyday work</p>
+</header>
+<main>
+<input id="search" type="search" placeholder="Search tools..." aria-label="Search tools">
+<h2>Popular Free Tools</h2>
+<div class="tools" id="tools"></div>
+<section id="workspace">
+<h2 id="toolTitle">Online Tool</h2>
+<div id="form"></div>
+<div id="result" aria-live="polite"></div>
+</section>
+<section>
+<h2>About Our Tools</h2>
+<p>Use our free online calculators, text tools, QR code generator and image utilities. We aim to make everyday tasks simple on mobile and desktop.</p>
+</section>
+</main>
+<footer>© 2026 All Tools Online</footer>
+<script>
+const items=[
+["Age Calculator","Calculate age from date","age"],
+["Percentage Calculator","Calculate percentages","percent"],
+["Word Counter","Count words and characters","words"],
+["QR Code Generator","Create a QR code","qr"],
+["YouTube Title Generator","Generate title ideas","title"],
+["YouTube Description Generator","Create a video description","desc"],
+["Hashtag Generator","Generate hashtags","hash"],
+["Instagram Bio Generator","Create a profile bio","bio"],
+["YouTube Thumbnail Maker","Create a thumbnail design","thumb"],
+["Image Compressor","Reduce image file size","compress"],
+["Image Resizer","Resize an image","resize"],
+["JPG to PNG","Convert image format","png"],
+["Passport Photo Maker","Prepare a passport photo","passport"],
+["Image to Text (OCR)","Extract text from an image","ocr"],
+["PDF to Word","Extract PDF text","pdfword"],
+["Word to PDF","Create a basic PDF","wordpdf"],
+["Compress PDF","Reduce PDF size","compresspdf"],
+["Merge PDF","Combine PDF files","merge"],
+["JPG to PDF","Convert photos to PDF","jpgpdf"],
+["Background Remover","Explore background removal","bg"]
+];
+const root=document.getElementById("tools");
+const search=document.getElementById("search");
+items.forEach((t,i)=>{
+const card=document.createElement("article");
+card.className="card";
+card.dataset.name=t[0].toLowerCase();
+card.innerHTML=`<div style="font-size:27px">${["🎂","🔢","📝","🔳","🎬","📺","#️⃣","👤","🖼️","📷","📐","🌄","🪪","🔎","📄","📑","🗜️","📚","🖼️","✂️"][i]}</div><h3>${t[0]}</h3><p>${t[1]}</p><button type="button">Open Tool</button>`;
+card.querySelector("button").addEventListener("click",()=>openTool(t[2],t[0]));
+root.appendChild(card);
+});
+search.addEventListener("input",()=>{
+const q=search.value.toLowerCase();
+document.querySelectorAll(".card").forEach(c=>c.hidden=!c.dataset.name.includes(q));
+});
+const box=document.getElementById("workspace");
+const form=document.getElementById("form");
+const result=document.getElementById("result");
+function field(label,id,type="text"){
+return `<label>${label}<input id="${id}" type="${type}"></label>`;
+}
+function btn(label,fn){
+const b=document.createElement("button");b.textContent=label;b.type="button";b.onclick=fn;form.appendChild(b);
+}
+function output(text){result.replaceChildren();result.append(document.createTextNode(text));}
+function openTool(id,name){
+box.style.display="block";
+document.getElementById("toolTitle").textContent=name;
+form.replaceChildren();result.replaceChildren();
+const area=(label,id)=>{form.insertAdjacentHTML("beforeend",`<label>${label}<textarea id="${id}" rows="4"></textarea></label>`);};
+const file=(label,id,accept,multiple=false)=>{form.insertAdjacentHTML("beforeend",`<label>${label}<input id="${id}" type="file" accept="${accept}" ${multiple?"multiple":""}></label>`);};
+if(id==="age"){
+form.innerHTML=field("Date of birth","birth","date");
+btn("Calculate Age",()=>{
+const d=new Date(document.getElementById("birth").value+"T00:00:00");
+if(!document.getElementById("birth").value||isNaN(d.getTime())||d>new Date()){output("Enter a valid date of birth.");return}
+const n=new Date();let y=n.getFullYear()-d.getFullYear(),m=n.getMonth()-d.getMonth(),day=n.getDate()-d.getDate();
+if(day<0){m--;day+=new Date(n.getFullYear(),n.getMonth(),0).getDate()}if(m<0){y--;m+=12}
+output(`${y} years, ${m} months, ${day} days`);
+});
+}else if(id==="percent"){
+form.innerHTML=field("Percentage (%)","pct","number")+field("Number","num","number");
+btn("Calculate",()=>{let p=Number(document.getElementById("pct").value),n=Number(document.getElementById("num").value);if(!document.getElementById("pct").value||!document.getElementById("num").value)return output("Enter both numbers.");output("Result: "+(p*n/100))});
+}else if(id==="words"){
+area("Enter your text","txt");
+btn("Count",()=>{let s=document.getElementById("txt").value;output(`Words: ${s.trim()?s.trim().split(/\s+/).length:0} | Characters: ${s.length}`)});
+}else if(id==="qr"){
+form.innerHTML=field("Text or URL","qrtext");
+btn("Generate QR",()=>{
+let val=document.getElementById("qrtext").value.trim();if(!val)return output("Enter text or a URL.");
+result.innerHTML="";
+const img=document.createElement("img");img.alt="Generated QR code";img.width=220;img.height=220;img.src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data="+encodeURIComponent(val);
+img.onerror=()=>output("QR service unavailable. Try again later.");
+result.appendChild(img);
+});
+}else if(["title","desc","hash","bio"].includes(id)){
+area("Enter your topic or keywords","topic");
+btn("Generate Suggestions",()=>{
+let s=document.getElementById("topic").value.trim();if(!s)return output("Enter a topic first.");
+let text=id==="title"?`How to ${s} | Easy Guide for Beginners\n${s}: Complete Guide\n5 Things to Know About ${s}`:id==="desc"?`Welcome! In this video, we discuss ${s}.\nWatch till the end and subscribe for more useful content.`:id==="hash"?s.split(/\s+/).filter(Boolean).map(x=>"#"+x.replace(/[^\p{L}\p{N}_]/gu,"")).join(" "):`✨ Sharing ${s}\n📌 Tips, ideas & useful content\n👇 Follow for more`;
+output(text);
+});
+}else if(["compress","resize","png","passport"].includes(id)){
+file("Choose an image","img","image/*");
+if(id==="resize")form.insertAdjacentHTML("beforeend",field("Width in pixels","width","number")+field("Height in pixels","height","number"));
+if(id==="compress")form.insertAdjacentHTML("beforeend",field("JPEG quality (10–100)","quality","number"));
+btn("Process Image",async()=>{
+const f=document.getElementById("img").files[0];if(!f)return output("Choose an image first.");
+if(f.size>15*1024*1024)return output("Choose an image smaller than 15 MB.");
+try{
+const url=URL.createObjectURL(f),im=new Image();
+im.onload=()=>{
+let w=im.naturalWidth,h=im.naturalHeight;
+if(id==="resize"){w=Number(document.getElementById("width").value);h=Number(document.getElementById("height").value);if(!w||!h||w>5000||h>5000){URL.revokeObjectURL(url);return output("Enter width and height from 1 to 5000.");}}
+if(id==="passport"){const scale=Math.min(600/w,600/h);w=Math.round(w*scale);h=Math.round(h*scale);}
+const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(im,0,0,w,h);
+const mime=id==="png"?"image/png":"image/jpeg";
+c.toBlob(blob=>{
+URL.revokeObjectURL(url);if(!blob)return output("Could not process this image.");
+result.replaceChildren();
+const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=id==="png"?"converted.png":id==="passport"?"passport-photo.jpg":"processed-image.jpg";a.textContent="Download processed image";
+const preview=document.createElement("img");preview.src=a.href;preview.alt="Processed image";preview.style.cssText="display:block;max-width:100%;margin:12px 0";
+result.append(preview,a,document.createElement("br"));
+result.append(document.createTextNode("Original: "+Math.round(f.size/1024)+" KB; new: "+Math.round(blob.size/1024)+" KB"));
+},mime,id==="compress"?Math.max(.1,Math.min(1,(Number(document.getElementById("quality").value)||75)/100)):.9);
+};im.onerror=()=>{URL.revokeObjectURL(url);output("Could not open this image.")};im.src=url;
+}catch(e){output("Image processing failed. Try another image.");}
+});
+}else if(id==="ocr"){
+file("Choose an image","ocrimg","image/*");
+btn("Extract Text",async()=>{
+const f=document.getElementById("ocrimg").files[0];if(!f)return output("Choose an image first.");
+output("OCR needs an OCR engine. This tool will be enabled after its library is connected.");
+});
+}else if(["pdfword","wordpdf","compresspdf","merge","jpgpdf","bg"].includes(id)){
+if(id==="pdfword")file("Choose a PDF","pdf","application/pdf");
+else if(id==="merge")file("Choose PDF files","pdfs","application/pdf",true);
+else if(id==="jpgpdf")file("Choose photos","photos","image/*",true);
+else if(id==="wordpdf")area("Text to put in PDF","pdftxt");
+else if(id==="compresspdf")file("Choose a PDF","compressfile","application/pdf");
+else file("Choose an image","bgimg","image/*");
+const message={
+pdfword:"PDF to Word conversion needs a PDF parsing and document-export library.",
+wordpdf:"A PDF creation library is needed to create a downloadable PDF.",
+compresspdf:"PDF compression needs a PDF processing library.",
+merge:"Merging PDFs needs a PDF processing library.",
+jpgpdf:"Converting images to PDF needs a PDF creation library.",
+bg:"Automatic background removal needs a background-removal model or API."
+};
+btn("Continue",()=>output(message[id]+" This feature is not implemented yet."));
+}
+box.scrollIntoView({behavior:"smooth",block:"start"});
+}
+</script>
+</body>
+</html>
